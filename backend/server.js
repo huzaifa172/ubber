@@ -3,9 +3,7 @@ const app = require("./app")
 
 
 const port = process.env.PORT || 5000
-
-
-
+// db.on("error" , console.error.bind(console , "MongoDB Connection Error:"))
 
 
 

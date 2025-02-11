@@ -2,13 +2,15 @@ const mongoose = require("mongoose")
 const config = require("config")
 const dbgr = require("debug")("development:mongoose")
 
-mongoose.connect(`${config.get("MONGO_URI")}/ubber`)
-  .then(() => {
-    dbgr('DB Connected');
+function connectDB(){
+  const db = process.env.MONGO_URI || config.get("MONGO_URI")
+  mongoose.connect(db)
+  .then(()=>{
+    console.log("connected to the database");
   })
-  .catch((err) => {
-    dbgr('DB Connection Error:', err);
-  });
+  .catch((err)=>{
+    dbgr(err)
+  })
+}
 
-
-module.exports = mongoose.connection
+module.exports = connectDB
