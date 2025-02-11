@@ -1,4 +1,4 @@
-# Backend API Ducomentation 
+# Backend API Ducomentation
 
 ## User Registration Endpoint
 
@@ -172,4 +172,71 @@ Example:
   "message": "you logged out successfully"
 }
 ```
-````
+
+## User Profile Endpoint
+
+### Endpoint
+
+`GET /users/profile`
+
+### Description
+
+This endpoint is used to fetch the profile of the authenticated user.
+
+### Headers
+
+- `Authorization: Bearer <token>` (required)
+
+### Response
+
+#### Success
+
+- **Status Code**: `200 OK`
+- **Body**: A JSON object containing the user profile data.
+
+Example:
+
+```json
+{
+  "_id": "user_id",
+  "name": {
+    "firstName": "John",
+    "lastName": "Doe"
+  },
+  "email": "john.doe@example.com",
+  "role": "user",
+  "address": "123 Main St",
+  "phoneNumber": "123-456-7890",
+  "socketId": "socket_id"
+}
+```
+
+#### Error
+
+- **Status Code**: `401 Unauthorized`
+- **Body**: A message indicating that the token is missing or invalid.
+
+Example:
+
+```json
+{
+  "message": "Unauthorized"
+}
+```
+
+- **Status Code**: `404 Not Found`
+- **Body**: A message indicating that the user is not found.
+
+Example:
+
+```json
+{
+  "message": "User not found"
+}
+```
+
+### Example Request
+
+```bash
+curl -H "Authorization: Bearer <token>" http://localhost:3000/users/profile
+```

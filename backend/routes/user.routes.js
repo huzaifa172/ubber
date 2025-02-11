@@ -2,13 +2,18 @@ const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/user.controller");
 const { body } = require("express-validator");
+const { authUser } = require('../middlewares/auth.middleware');
+const cookieParser = require('cookie-parser');
+
+
+router.use(cookieParser());
 
 // middlewares
 
 // routes 
-router.get("/" , (req , res)=>{
-  res.send("Alhumdulillah")
-})
+router.get("/", (req, res) => {
+  res.send("Alhumdulillah user routes working");
+});
 
 // register route
 router.post("/register", [
@@ -23,10 +28,10 @@ router.post("/login", [
   body('password').isLength({ min: 6 }).withMessage("Password should be at least 6 characters long"),
 ], userController.login);
 
-
 // logout user
-router.get("/logout" , userController.logout)
+router.get("/logout", authUser,  userController.logout);
 
+// user profile route 
+router.get("/profile", authUser, userController.profile);
 
-// exports 
 module.exports = router;

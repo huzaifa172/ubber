@@ -1,20 +1,19 @@
 const dotenv = require("dotenv")
 dotenv.config()
 const express = require("express")
+const app = express()
 const cors = require("cors")
 const db = require("./db/db")
-
+const cookieParser = require('cookie-parser');
 
 // routes 
-db()
 const mainRoutes = require("./routes/main.routes")
 const userRoutes = require("./routes/user.routes")
 const captainRoutes = require("./routes/captain.routes")
 
-const app = express()
+db()
 // middlewares 
-
-
+app.use(cookieParser());
 app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))

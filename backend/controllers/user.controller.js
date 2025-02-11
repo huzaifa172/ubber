@@ -2,6 +2,7 @@ const { response } = require('express');
 const userModel = require('../models/user.model');
 const userService = require('../services/user.service');
 const { validationResult } = require("express-validator");
+const blacklistTokenModel = require('../models/blacklist.token.model');
 
 
 // register controller
@@ -25,7 +26,7 @@ module.exports.register = async (req, res, next) => {
 
   // send cookies 
   const token = user.generateAuthToken();
-  res.cookie("token" , token , {expiresIn : "6days" , httpOnly : true})
+  res.cookie("token" , token , {expiresIn : "6days"})
 
     // send response 
     res.status(201).json({ user}
@@ -60,7 +61,7 @@ try {
 
     // cookie send 
     const token = user.generateAuthToken();
-    res.cookie("token" , token , {expiresIn : "6days" , httpOnly : true})
+    res.cookie("token" , token)
     
     
     // send response
@@ -69,12 +70,23 @@ try {
   console.log(error.message);}}
 
 
+// profile controller
+module.exports.profile =  async (req , res)=>{
+  try {
+    const user = await userModel.findById(req.user._id).select("-password");
+    res.status(200).json(user);
+  } catch (error) {
+    console.log(error.message);}
+}
 
 
 // logout controller 
 module.exports.logout = async (req , res)=>{
   try {
     res.clearCookie("token");
+    const token = req.cookies.token || req.headers.authorization.split(" ")[1];
+    await blacklistTokenModel.create({token});
+    
     res.status(200).json("you logged out successfully");
   } catch (error) {
     console.log(error.message);
