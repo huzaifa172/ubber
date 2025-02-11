@@ -29,9 +29,21 @@ userSchema.methods.generateAuthToken = function() {
   return token;
 }
 
-userSchema.methods.comparePassword = async function(password) {
-  return await bcrypt.compare(password, this.password);
-}
+// userSchema.methods.comparePassword = async function(password) {
+//   return await bcrypt.compare(password, this.password);
+// }
+
+// validation of password
+
+userSchema.statics.comparePassword = async function (user, candidatePassword) {
+  if (!user || !user.password) {
+    throw new Error('User or hashed password is missing');
+  }
+  return await bcrypt.compare(candidatePassword, user.password);
+};
+
+
+// hasing password 
 
 userSchema.statics.hashPassword = async function(password) {
   return bcrypt.hash(password, 10);

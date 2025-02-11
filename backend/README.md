@@ -93,3 +93,83 @@ Example:
   ]
 }
 ```
+
+## User Login Endpoint
+
+### Endpoint
+
+`POST /user/login`
+
+### Description
+
+This endpoint is used to log in an existing user. The user needs to provide an email and password.
+
+### Request Body
+
+The request body should be a JSON object containing the following fields:
+
+- `email`: A valid email address (string).
+- `password`: A password with at least 6 characters (string).
+
+Example:
+
+```json
+{
+  "email": "example@example.com",
+  "password": "password123"
+}
+```
+
+### Response
+
+#### Success
+
+- **Status Code**: `200 OK`
+- **Body**: A message indicating successful login.
+
+Example:
+
+```json
+{
+  "message": "you logged in successfully"
+}
+```
+
+#### Error
+
+- **Status Code**: `400 Bad Request`
+- **Body**: A message indicating invalid email or password.
+
+Example:
+
+```json
+{
+  "message": "Invalid email or password"
+}
+```
+
+## User Logout Endpoint
+
+### Endpoint
+
+`GET /user/logout`
+
+### Description
+
+This endpoint is used to log out an authenticated user.
+
+### Response
+
+#### Success
+
+- **Status Code**: `200 OK`
+- **Body**: A message indicating successful logout.
+
+Example:
+
+```json
+{
+  "message": "you logged out successfully"
+}
+```
+````
