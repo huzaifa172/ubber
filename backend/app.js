@@ -23,7 +23,7 @@ app.use(express.urlencoded({extended: true}))
 // routes 
 app.use("/api" , mainRoutes)
 app.use("/api/users" , userRoutes)
-app.use("/api/captains" , captainRoutes)
+app.use("/api/captain" , captainRoutes)
 
 
 // exports 

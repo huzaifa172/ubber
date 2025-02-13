@@ -240,3 +240,84 @@ Example:
 ```bash
 curl -H "Authorization: Bearer <token>" http://localhost:3000/users/profile
 ```
+
+
+# Captain API's
+## Captain Registration Endpoint
+
+### Endpoint
+
+`POST /captain/register`
+
+### Description
+
+This endpoint is used to register a new captain. The captain needs to provide various details including email, password, and vehicle information.
+
+### Request Body
+
+The request body should be a JSON object containing the following fields:
+
+- `email`: A valid email address (string).
+- `password`: A password with at least 6 characters (string).
+- `firstName`: A first name with at least 3 characters (string).
+- `lastName`: A last name with at least 3 characters (string).
+- `phoneNumber`: A phone number with at least 11 characters (string).
+- `vehicleColor`: The color of the vehicle (string).
+- `vehicleModel`: The model of the vehicle (string).
+- `vehiclePlate`: The plate number of the vehicle (string).
+- `vehicleType`: The type of the vehicle, which should be one of 'bike', 'car', 'van', or 'truck' (string).
+- `vehicleCapacity`: The capacity of the vehicle (number).
+
+Example:
+
+```json
+{
+  "email": "captain@example.com",
+  "password": "password123",
+  "firstName": "John",
+  "lastName": "Doe",
+  "phoneNumber": "12345678901",
+  "vehicleColor": "Red",
+  "vehicleModel": "Toyota",
+  "vehiclePlate": "XYZ123",
+  "vehicleType": "car",
+  "vehicleCapacity": 4
+}
+```
+
+### Response
+
+#### Success
+
+- **Status Code**: `201 Created`
+- **Body**: A JSON object containing the captain details.
+
+Example:
+
+```json
+{
+  "id": "captain_id",
+  "email": "captain@example.com",
+  "firstName": "John",
+  "lastName": "Doe"
+}
+```
+
+#### Error
+
+- **Status Code**: `400 Bad Request`
+- **Body**: A JSON object containing the error message.
+
+Example:
+
+```json
+{
+  "errors": [
+    {
+      "msg": "Please enter a valid email",
+      "param": "email",
+      "location": "body"
+    }
+  ]
+}
+```
