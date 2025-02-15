@@ -1,0 +1,25 @@
+{
+  "name": "ubber",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/huzaifa172/ubber#readme",
+  "bugs": {
+    "url": "https://github.com/huzaifa172/ubber/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/huzaifa172/ubber.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd backend && npm run dev",
+    "client": "cd frontend && npm run dev"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
