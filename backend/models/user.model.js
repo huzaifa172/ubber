@@ -25,12 +25,26 @@ const userSchema = mongoose.Schema({
 })
 
 userSchema.methods.generateAuthToken = function() {
-  const token = jwt.sign(
-    { _id: this._id },
-    process.env.SECRET_KEY,
-    { expiresIn: '24h' } // Set token to expire in 24 hours
-  );
+  try {
+  if (!process.env.SECRET_KEY) {
+    throw new Error("SECRET_KEY is missing in environment variables");
+  }
+
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { _id: this._id, email: this.email}, // Include more details if needed
+      process.env.SECRET_KEY,
+      { expiresIn: "24h" } // Token expires in 24 hours
+    );
+
+
+
   return token;
+} catch (error) {
+  console.error("Token Generation Error:", error.message);
+  return null; // Return null if token generation fails
+}
 }
 
 // userSchema.methods.comparePassword = async function(password) {

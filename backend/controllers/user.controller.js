@@ -1,9 +1,11 @@
-const { response } = require('express');
 const userModel = require('../models/user.model');
 const userService = require('../services/user.service');
 const { validationResult } = require("express-validator");
 const blacklistTokenModel = require('../models/blacklist.token.model');
+const flash = require('connect-flash');
+const expressSession = require('express-session');
 
+// middle ware 
 
 // register controller
 module.exports.register = async (req, res, next) => {
@@ -14,8 +16,13 @@ module.exports.register = async (req, res, next) => {
     // register user 
   const { firstName, lastName, email, password } = req.body;
   const userExists = await userModel.findOne({email})
-  if(userExists) return res.status(400).json({message : "User already exists"})
-  const hashPassword = await userModel.hashPassword(password);
+  if (userExists){
+
+    req.flash("error", "User already exists");
+    return res.status(400).json({ success: false, message: req.flash("error")[0] })
+  }
+  
+    const hashPassword = await userModel.hashPassword(password);
 
   const user = await userService.createUser({
     firstName,
@@ -28,9 +35,10 @@ module.exports.register = async (req, res, next) => {
   const token = user.generateAuthToken();
   res.cookie("token" , token , {expiresIn : "6days"})
 
-    // send response 
-    res.status(201).json({ user}
-  );}catch(err){
+    // send response
+    req.flash("success", "Login successful!"); 
+    res.status(200).json({ success: true, message: req.flash("success")[0] , token: token });
+  }catch(err){
    console.log(err);
    
   }
@@ -48,24 +56,38 @@ try {
     let { email, password } = req.body;
     // console.log(password , email );
     
+    // Check if email & password are provided
+    if (!email || !password) {
+      return res.status(400).json({ success: false, message: "Email and password are required" });
+    }
+
+
       const user = await userModel.findOne({ email }).select('+password');
         
       if (!user) {
-          return res.status(400).send('Invalid email or password.');
+        
+        req.flash("error", "invalid UserName or Password ");
+        return res.status(400).json({ success: false, message: req.flash("error")[0] })
         }
         const isMatch = await userModel.comparePassword( user, password);
         if (!isMatch) {
-          return res.status(400).send('Invalid email or password.');
+        req.flash("error", "invalid UserName or Password ");
+        return res.status(400).json({ success: false, message: req.flash("error")[0] })
         }
       
 
     // cookie send 
     const token = user.generateAuthToken();
-    res.cookie("token" , token)
+    console.log("Generated Token:", token);
+    res.cookie("token" , token ,{
+      httpOnly: true,  // Prevent JavaScript access to the cookie
+      sameSite: "strict" // Prevent CSRF attacks
+    });
     
     
     // send response
-    res.status(200).json("you logged in successfully ");
+    req.flash("error", "You are Logged in successfully");
+    return res.status(200).json({ success: true, message: req.flash("error")[0]  , token: token})
 } catch (error) {
   console.log(error.message);}}
 

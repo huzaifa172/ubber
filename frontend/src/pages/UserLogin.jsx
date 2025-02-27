@@ -1,5 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState , useContext } from 'react'
 import { Link } from 'react-router-dom'
+import axios from 'axios';
+import { UserDataContext } from '../context/UserContext.jsx';
+import { useNavigate } from 'react-router-dom';
 
 
 const UserLogin = () => {
@@ -10,23 +13,90 @@ const UserLogin = () => {
   const [userData , setUserData] = useState({});
 
 
+    // error and success meassages from backend 
+    const [message, setMessage] = useState(null);
+    const [messageType, setMessageType] = useState("");
 
-  const submitHandler = (e)=>{
-    e.preventDefault();
-    setUserData({
-      email: email,
-      password: password,
-    })
+    // for rediraction 
+    const navigate = useNavigate();
+    const {user , setUser} = useContext(UserDataContext);
+
+
+  const submitHandler = async (e)=>{
+    try {
+      e.preventDefault();
+      const userData = {
+      email : email, 
+      password : password
+    }
+
+
+    // res
+    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/login`, userData)
     
+    console.log(response);
+    //  if user already exists
+    if(response.status === 400){
+      const data = await response.data
+      setMessage(data.message);
+      setMessageType("error");
+    }
+    
+    // success fully registered
+    if(response.status === 200){
+      const data = response.data
+      console.log("Received Token:", data.token);
+      console.log(data);
+      setMessage("Logged In Successfully");
+      setMessageType("success");
+
+      // redirect to home page
+      setUser(response.data.user);
+      localStorage.setItem('token' , data.token)
+      console.log(data.token);      
+      setTimeout(() => navigate("/home"), 2000);
+    }
+  
+  }catch (error) {
+    // ✅ Handle errors properly
+    if (error.response) {
+      setMessage(error.response.data.message || "Something went wrong");
+      setMessageType("error");
+    } else {
+      setMessage("Network error. Please try again.");
+      setMessageType("error");
+    }
+  }
+
+  
     console.log(userData)
     setEmail('')
     setPassword('')    
+  
+    setTimeout(() => setMessage(null), 3000);
+  
   }
 
   return (
     <div>
 
               <div className="main-cnt flex flex-col justify-between items-start w-full  bg-white">
+
+              {/* flash massage  */}
+              {message && (
+                <div className='w-full items-center text-center'
+                    style={{
+                        padding: "10px",
+                        color: messageType === "error" ? "red" : "green",
+                        backgroundColor: messageType === "error" ? "#ffdddd" : "#ddffdd",
+                        border: `1px solid ${messageType === "error" ? "red" : "green"}`,
+                        marginBottom: "10px",
+                    }}
+                >
+                    {message}
+                </div>
+            )}
+
                     <div className="header-cnt p-5 flex flex-col justify-between w-full">
                     <img src={logo} alt="logo" className='w-[100px]' />
                     <h3 className='pt-5 pb-0 font-semibold  text-xl'>Sign in as user </h3>

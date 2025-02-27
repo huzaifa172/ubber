@@ -4,11 +4,23 @@ const userController = require("../controllers/user.controller");
 const { body } = require("express-validator");
 const { authUser } = require('../middlewares/auth.middleware');
 const cookieParser = require('cookie-parser');
+const flash = require('connect-flash')
+const expressSession = require('express-session')
+
+
 
 
 router.use(cookieParser());
 
 // middlewares
+router.use(
+  expressSession({
+    resave : false, 
+    saveUninitialized : false, 
+    secret : process.env.SESSION_SECRET,
+  })
+)
+router.use(flash())
 
 // routes 
 router.get("/", (req, res) => {
