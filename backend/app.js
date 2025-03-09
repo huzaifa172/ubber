@@ -5,9 +5,6 @@ const app = express()
 const cors = require("cors")
 const db = require("./db/db")
 const cookieParser = require('cookie-parser');
-const flash = require('connect-flash')
-const expressSession = require('express-session')
-
 
 
 

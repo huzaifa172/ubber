@@ -86,7 +86,7 @@ try {
     
     
     // send response
-    req.flash("error", "You are Logged in successfully");
+    req.flash("Success", "You are Logged in successfully");
     return res.status(200).json({ success: true, message: req.flash("error")[0]  , token: token})
 } catch (error) {
   console.log(error.message);}}

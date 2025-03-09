@@ -39,7 +39,7 @@ const UserSignup = () => {
       const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/register`, newUser)
       console.log(response.data);
       
-      // if user already exists
+      // if user already existsx
       if(response.status === 400){
         const data = await response.data
         setMessage(data.message);

@@ -11,7 +11,10 @@ module.exports.register = async (req, res , next) => {
       if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
       let { firstName, lastName, email, password, phoneNumber, vehicleCapacity, vehicleType, vehiclePlate, vehicleModel, vehicleColor } = req.body;
       const captainExists = await captainModel.findOne({ email });
-      if (captainExists) return res.status(400).json({ message: "Captain already exists" });
+      if (captainExists){
+        req.flash("error", "Captain Already Exits");
+        return res.status(400).json({ success: false, message: req.flash("error")[0] })
+      }
       const hashPassword = await captainModel.hashPassword(password);
       const captain = await captainService.createCaptain({
         firstName,
@@ -32,7 +35,8 @@ module.exports.register = async (req, res , next) => {
 
 
       // response 
-        res.status(201).json(captain);
+        req.flash("success", "You Registered Successfully as Captain"); 
+        res.status(200).json({ success: true, message: req.flash("success")[0] , token: token , captain : captain});
     } catch (err) {
         res.status(400).send(err);
     }
@@ -49,18 +53,22 @@ module.exports.login = async (req, res, next) => {
     let { email, password } = req.body;
     const captain = await captainModel.findOne({ email }).select('+password');
     if (!captain) {
-      return res.status(400).send('Invalid email or password.');
+      req.flash("error", "invalid Email Or Password");
+      return res.status(400).json({ success: false, message: req.flash("error")[0] })
     }
     const isMatch = await captainModel.comparePassword(captain, password);
     if (!isMatch) {
-      return res.status(400).send('Invalid email or password.');
+      req.flash("error", "invalid Email Or Password");
+      return res.status(400).json({ success: false, message: req.flash("error")[0] })
     }
 
     // send cookies
     const token = captain.generateAuthToken();
     res.cookie("token", token, { expiresIn: "6days" });
     // response 
-    res.status(200).json(captain);
+
+    req.flash("Success", "You are Logged in successfully");
+    res.status(200).json({ success: true, message: req.flash("error")[0]  , token: token ,  captain : captain});
   } catch (err) {
     res.status(400).send(err);
   }
