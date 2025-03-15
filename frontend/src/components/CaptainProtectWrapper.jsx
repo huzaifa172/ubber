@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 const CaptainProtectWrapper = ({
   children
 }) => {
-  const token = localStorage.getItem('token')
+  const token = localStorage.getItem('tokenCaptain')
   const navigate = useNavigate()
 
   console.log(token)

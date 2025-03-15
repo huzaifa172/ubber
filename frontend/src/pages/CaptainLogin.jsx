@@ -46,7 +46,7 @@ try {
     // success fully registered
     if(response.status === 200){
       const data = response.data
-      console.log("Received Token:", data.token);
+      console.log("Received Token:", data.tokenCaptain);
       console.log(data);
       setMessage("Logged In Successfully");
       setMessageType("success");
@@ -54,7 +54,7 @@ try {
 
       // redirect to home page
       setCaptain(response.data.user);
-      localStorage.setItem('token' , data.token)
+      localStorage.setItem('tokenCaptain' , data.tokenCaptain)
       console.log(data.token);      
       setTimeout(() => navigate("/chome"), 2000);
     }
@@ -79,6 +79,7 @@ try {
   return (
     <div>
                     <div className="main-cnt flex flex-col justify-between items-start w-full  bg-white">
+                      
                         {/* flash massage  */}
                         {message && (
                                       <div className='w-full items-center text-center'

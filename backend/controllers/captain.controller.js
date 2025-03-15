@@ -30,13 +30,13 @@ module.exports.register = async (req, res , next) => {
       })
 
       // send cookies 
-      const token = captain.generateAuthToken();
-      res.cookie("token" , token , {expiresIn : "6days"})
+      const tokenCaptain = captain.generateAuthToken();
+      res.cookie("tokenCaptain" , tokenCaptain , {expiresIn : "6days"})
 
 
       // response 
         req.flash("success", "You Registered Successfully as Captain"); 
-        res.status(200).json({ success: true, message: req.flash("success")[0] , token: token , captain : captain});
+        res.status(200).json({ success: true, message: req.flash("success")[0] , tokenCaptain: tokenCaptain , captain : captain});
     } catch (err) {
         res.status(400).send(err);
     }
@@ -63,12 +63,12 @@ module.exports.login = async (req, res, next) => {
     }
 
     // send cookies
-    const token = captain.generateAuthToken();
-    res.cookie("token", token, { expiresIn: "6days" });
+    const tokenCaptain = captain.generateAuthToken();
+    res.cookie("tokenCaptain", tokenCaptain, { expiresIn: "6days" });
     // response 
 
     req.flash("Success", "You are Logged in successfully");
-    res.status(200).json({ success: true, message: req.flash("error")[0]  , token: token ,  captain : captain});
+    res.status(200).json({ success: true, message: req.flash("error")[0]  , tokenCaptain: tokenCaptain ,  captain : captain});
   } catch (err) {
     res.status(400).send(err);
   }
@@ -79,7 +79,7 @@ module.exports.logout = async (req, res, next) => {
     res.clearCookie("token");
     const token = req.cookies.token || req.headers.authorization.split(" ")[1];
     if (!token) return res.status(401).json({ message: "Unauthorized" });
-    await captainBlacklistTokenModel.create({token});
+    await captainBlacklistTokenModel.create({tokenCaptain});
     res.status(200).send("Logged out successfully");
   } catch (err) {
     res.send(err.message);

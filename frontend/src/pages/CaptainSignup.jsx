@@ -63,7 +63,7 @@ const CaptainSignup = () => {
 
         // redirect to home page
         setUser(response.data.captain);
-        localStorage.setItem('token' , data.token)
+        localStorage.setItem('tokenCaptain' , data.tokenCaptain)
         setTimeout(() => navigate("/chome"), 2000);
       }
     }catch (error) {
